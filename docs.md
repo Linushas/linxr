@@ -40,3 +40,23 @@ Ex)
 ```bash
 linxr list -l c++
 ```
+
+---
+### template
+Create, delete or view your templates
+```bash
+linxr template <template-name> <action>
+```
+or to view all your saved templates
+```bash
+linxr template view
+```
+
+**Actions:**
+```new``` Create new template from current directory.
+```delete``` Delete specified template.
+
+Ex)
+```bash
+linxr template my_template new
+```
