@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 )
@@ -18,34 +19,59 @@ func main() {
 	}
 
 	// COMMANDS
-	if len(os.Args) > 1 && os.Args[1] == "init" {
-		initCommand()
-	} else if len(os.Args) > 1 && os.Args[1] == "help" {
-		helpCommand()
-	} else if len(os.Args) > 1 && os.Args[1] == "list" {
-		listCommand()
-	} else if len(os.Args) > 1 && os.Args[1] == "search" {
-		searchCommand()
-	} else if len(os.Args) > 1 && os.Args[1] == "update" {
-		updateCommand()
+	if len(os.Args) > 1 {
+		if os.Args[1] == "init" {
+			initCommand()
+		} else if os.Args[1] == "help" {
+			helpCommand()
+		} else if os.Args[1] == "list" {
+			listCommand()
+		} else if os.Args[1] == "search" {
+			searchCommand()
+		} else if os.Args[1] == "update" {
+			updateCommand()
+		} else if os.Args[1] == "template" {
+			templateCommand()
+		}
+		// linxr add (add exesting project to list)
 	}
-	// linxr add (add exesting project to list)
+
 }
 
 func initCommand() {
+	git := true
+
 	if len(os.Args) == 2 {
 		fmt.Printf("Succesfully initialized linxr project in current directory.\n")
-	} else if len(os.Args) == 3 {
+	} else if len(os.Args) >= 3 {
+		if len(os.Args) >= 5 && os.Args[3] == "-g" {
+			if os.Args[4] == "disable" {
+				git = false
+			} else {
+				git = true
+			}
+		}
 		if os.Args[2] == "blank" {
 			fmt.Printf("Succesfully initialized linxr project in current directory.\n")
 		} else {
-			fmt.Printf("Trying to copy template to current directory...\n")
+			fmt.Printf("Trying to copy template to current directory...\n\n")
 			templateDir := filepath.Join(getTemplateDir(), os.Args[2])
 			err := copyTemplate(templateDir, ".")
 			if err != nil {
 				fmt.Printf("Error initializing project: %v\n", err)
 			} else {
 				fmt.Println("Project files copied successfully.")
+
+				if git {
+					cmd := exec.Command("git", "init")
+					output, err := cmd.CombinedOutput()
+					if err != nil {
+						fmt.Printf("Error: %s\n", err)
+						return
+					}
+					fmt.Printf("Git: %s\n", string(output))
+				}
+
 				fmt.Printf("Succesfully initialized linxr project using the SDL2_C template in current directory.\n")
 			}
 		}
@@ -111,7 +137,8 @@ func helpCommand() {
 	if len(os.Args) == 2 {
 		fmt.Printf("Linxr is a CLI tool for effortless project management in your terminal.\n- Usage: linxr <command>\n\n")
 		fmt.Printf("List of commands:\n\n  \thelp <command>\t\t\tInformation about specific command\n  \tinit <template> <opts>\t\tCreate new project from template\n")
-		fmt.Printf("\tlist <opts>\t\t\tList all your Linxr projects\n  \tsearch <string>\t\t\tSearch for Linxr projects\n\tupdate <project-name> <opts>\tEdit the status or description of a project\n\n")
+		fmt.Printf("\tlist <opts>\t\t\tList all your Linxr projects\n  \tsearch <string>\t\t\tSearch for Linxr projects\n\tupdate <project-name> <opts>\tEdit the status or description of a project\n")
+		fmt.Printf("\ttemplate <action>\t\tCommand to add or delete a template\n\n")
 	} else if len(os.Args) == 3 && os.Args[2] == "init" {
 		fmt.Printf("The init command is used to create a new project: 'linxr init <template> <opts>\n\n")
 		fmt.Printf("Templates:\n\n  \tblank\t\tEmpty project (no files is created)\n  \tSDL2_C\t\tC project using the SDL2 library\n")
@@ -129,5 +156,9 @@ func searchCommand() {
 }
 
 func updateCommand() {
+
+}
+
+func templateCommand() {
 
 }
