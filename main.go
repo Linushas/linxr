@@ -178,6 +178,28 @@ func templateCommand() {
 			}
 			newTemplate(templateName, templateDir)
 		}
+	} else if len(os.Args) >= 3 && os.Args[2] == "view" {
+		allTemplatesDir := getTemplateDir()
+		fmt.Printf("Templates:\n\n")
+		err := filepath.Walk(allTemplatesDir, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if info.IsDir() && path != allTemplatesDir {
+				relPath, _ := filepath.Rel(allTemplatesDir, path)
+				parts := filepath.SplitList(relPath)
+
+				if len(parts) == 1 {
+					fmt.Println("\t", filepath.Base(path))
+				}
+				return filepath.SkipDir
+			}
+			return nil
+		})
+		if err != nil {
+			fmt.Println("Error walking the directory:", err)
+		}
+		fmt.Printf("\n")
 	}
 
 }
