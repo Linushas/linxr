@@ -138,13 +138,48 @@ func helpCommand() {
 		fmt.Printf("Linxr is a CLI tool for effortless project management in your terminal.\n- Usage: linxr <command>\n\n")
 		fmt.Printf("List of commands:\n\n  \thelp <command>\t\t\tInformation about specific command\n  \tinit <template> <opts>\t\tCreate new project from template\n")
 		fmt.Printf("\tlist <opts>\t\t\tList all your Linxr projects\n  \tsearch <string>\t\t\tSearch for Linxr projects\n\tupdate <project-name> <opts>\tEdit the status or description of a project\n")
-		fmt.Printf("\ttemplate <action>\t\tCommand to add or delete a template\n\n")
+		fmt.Printf("\ttemplate <template-name> <action>\tCommand to add or delete a template\n\n")
 	} else if len(os.Args) == 3 && os.Args[2] == "init" {
 		fmt.Printf("The init command is used to create a new project: 'linxr init <template> <opts>\n\n")
 		fmt.Printf("Templates:\n\n  \tblank\t\tEmpty project (no files is created)\n  \tSDL2_C\t\tC project using the SDL2 library\n")
 		fmt.Printf("\nOptions:\n\n  \t-g\t\tEnable/Disable automatic git init. Ex) 'linx init <template> -g disable' to \n\t\t\tcreate project without git initialization.\n\n  \t-l\t\tSpecify the main language for the project.\n\n")
 		fmt.Printf("Note: Automatic git initialization is enabled by default. If no template is specified, the project defaults to blank (empty).\n\n")
 	}
+}
+
+func newTemplate(name string, srcDir string) {
+	templateDir := filepath.Join(getTemplateDir(), name)
+	err := copyTemplate(srcDir, templateDir)
+	if err != nil {
+		fmt.Printf("Error creating template: %v\n", err)
+	} else {
+		fmt.Println("Template files copied successfully.")
+	}
+}
+
+func templateCommand() {
+	templateName := ""
+	templateDir := "."
+	if len(os.Args) == 2 {
+		fmt.Printf("Please specify a template. See: 'linxr help template' for more information\n")
+	} else if len(os.Args) >= 4 {
+		templateName = os.Args[2]
+		if os.Args[3] == "delete" {
+			templatePath := filepath.Join(getTemplateDir(), templateName)
+			err := os.RemoveAll(templatePath)
+			if err != nil {
+				fmt.Printf("Error deleting template: %v\n", err)
+				return
+			}
+			fmt.Println("Template deleted successfully")
+		} else if os.Args[3] == "new" {
+			if len(os.Args) >= 5 {
+				templateDir = os.Args[4]
+			}
+			newTemplate(templateName, templateDir)
+		}
+	}
+
 }
 
 func listCommand() {
@@ -156,9 +191,5 @@ func searchCommand() {
 }
 
 func updateCommand() {
-
-}
-
-func templateCommand() {
 
 }
