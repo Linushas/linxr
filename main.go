@@ -109,14 +109,14 @@ func copyFile(templateFile, destFile string) error {
 
 func helpCommand() {
 	if len(os.Args) == 2 {
-		fmt.Printf("Linxr is a CLI tool for effortless project management in your terminal.\n- Usage: 'linxr <command>\n\n")
+		fmt.Printf("Linxr is a CLI tool for effortless project management in your terminal.\n- Usage: linxr <command>\n\n")
 		fmt.Printf("List of commands:\n\n  \thelp <command>\t\t\tInformation about specific command\n  \tinit <template> <opts>\t\tCreate new project from template\n")
 		fmt.Printf("\tlist <opts>\t\t\tList all your Linxr projects\n  \tsearch <string>\t\t\tSearch for Linxr projects\n\tupdate <project-name> <opts>\tEdit the status or description of a project\n\n")
 	} else if len(os.Args) == 3 && os.Args[2] == "init" {
 		fmt.Printf("The init command is used to create a new project: 'linxr init <template> <opts>\n\n")
-		fmt.Printf("Templates:\n\n  \tblank\t\tEmty project (no files is created)\n  \tSDL2_C\t\tC project using the SDL2 library\n")
+		fmt.Printf("Templates:\n\n  \tblank\t\tEmpty project (no files is created)\n  \tSDL2_C\t\tC project using the SDL2 library\n")
 		fmt.Printf("\nOptions:\n\n  \t-g\t\tEnable/Disable automatic git init. Ex) 'linx init <template> -g disable' to \n\t\t\tcreate project without git initialization.\n\n  \t-l\t\tSpecify the main language for the project.\n\n")
-		fmt.Printf("Note: Automatic git initialization is enabled by default. If no template is specified, the project defaults to 'blank'.\n\n")
+		fmt.Printf("Note: Automatic git initialization is enabled by default. If no template is specified, the project defaults to blank (empty).\n\n")
 	}
 }
 

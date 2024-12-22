@@ -12,7 +12,7 @@ linxr <command>
 ## Commands
 
 ### init
-To create a new project, use the *init* command directly in the project directory. Leave template and options emty to create a blank project. A blank project does not create any files. Only links the directory to linxr.
+To create a new project, use the *init* command directly in the project directory. Leave template and options empty to create a blank project. A blank project does not create any files. Only links the directory to linxr.
 ```bash
 linxr init <template> <opts>
 ```
