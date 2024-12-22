@@ -136,8 +136,8 @@ func copyFile(templateFile, destFile string) error {
 func helpCommand() {
 	if len(os.Args) == 2 {
 		fmt.Printf("Linxr is a CLI tool for effortless project management in your terminal.\n- Usage: linxr <command>\n\n")
-		fmt.Printf("List of commands:\n\n  \thelp <command>\t\t\tInformation about specific command\n  \tinit <template> <opts>\t\tCreate new project from template\n")
-		fmt.Printf("\tlist <opts>\t\t\tList all your Linxr projects\n  \tsearch <string>\t\t\tSearch for Linxr projects\n\tupdate <project-name> <opts>\tEdit the status or description of a project\n")
+		fmt.Printf("List of commands:\n\n  \thelp <command>\t\t\t\tInformation about specific command\n  \tinit <template> <opts>\t\t\tCreate new project from template\n")
+		fmt.Printf("\tlist <opts>\t\t\t\tList all your Linxr projects\n  \tsearch <string>\t\t\t\tSearch for Linxr projects\n\tupdate <project-name> <opts>\t\tEdit the status or description of a project\n")
 		fmt.Printf("\ttemplate <template-name> <action>\tCommand to add or delete a template\n\n")
 	} else if len(os.Args) == 3 && os.Args[2] == "init" {
 		fmt.Printf("The init command is used to create a new project: 'linxr init <template> <opts>\n\n")
