@@ -1,7 +1,7 @@
 # Linxr Docs
 For a list of all commands (or a specific command) use:
 ```bash
-linxr help <commands>
+linxr help <command>
 ```
 
 For all listed commands, the command name should be appended right after *linxr* like this:
