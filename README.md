@@ -4,4 +4,4 @@ Linxr is a lightweight CLI tool for managing and organizing your coding projects
 ## Installation
 
 ## Usage
-Read the [docs](./docs.md) to learn about all commands.
+Read [docs](./docs.md) to learn about all commands.
