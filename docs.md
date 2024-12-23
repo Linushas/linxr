@@ -60,3 +60,16 @@ Ex)
 ```bash
 linxr template my_template new
 ```
+
+---
+### jump
+Open one of your linxr project directories in a terminal window.
+```bash
+linxr jump ”project name”
+```
+
+Ex)
+```bash
+linxr jump ”My Fantastic Project”
+```
+
