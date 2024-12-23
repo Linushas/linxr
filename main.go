@@ -1,16 +1,31 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 )
 
-// type Project interface {
-// }
+type Project struct {
+	Name         string   `json:"name"`
+	Description  string   `json:"description"`
+	Status       string   `json:"status"`
+	Path         string   `json:"path"`
+	Created      string   `json:"created"`
+	LastModified string   `json:"last-modified"`
+	Tags         []string `json:"tags"`
+	Git          string   `json:"git"`
+	Repo         string   `json:"repo-url"`
+}
+
+type ProjectsWrapper struct {
+	Projects []Project `json:"projects"`
+}
 
 func main() {
 	if len(os.Args) < 2 {
@@ -32,10 +47,11 @@ func main() {
 			updateCommand()
 		} else if os.Args[1] == "template" {
 			templateCommand()
+		} else if os.Args[1] == "jump" {
+			jumpCommand()
 		}
 		// linxr add (add exesting project to list)
 	}
-
 }
 
 func initCommand() {
@@ -205,7 +221,106 @@ func templateCommand() {
 }
 
 func listCommand() {
+	projectsJsonPath := ""
+	if runtime.GOOS == "windows" {
+		appData := os.Getenv("APPDATA")
+		projectsJsonPath = filepath.Join(appData, "linxr", "linxr_projects.json")
+	} else {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			panic("Could not determine home directory")
+		}
+		projectsJsonPath = filepath.Join(homeDir, ".linxr", "linxr_projects.json")
+	}
 
+	src, err := os.Open(projectsJsonPath)
+	if err != nil {
+		return
+	}
+	defer src.Close()
+
+	data, err := ioutil.ReadAll(src)
+	if err != nil {
+		fmt.Println("Error reading file:", err)
+		return
+	}
+
+	var wrapper ProjectsWrapper
+	err = json.Unmarshal(data, &wrapper)
+	if err != nil {
+		fmt.Println("Error parsing JSON:", err)
+		return
+	}
+
+	fmt.Println("Projects:")
+	for _, project := range wrapper.Projects {
+		fmt.Printf("\t[%s]   (%s)\n", project.Name, project.Status)
+		if project.Description != "null" {
+			fmt.Printf("\t- %s\n", project.Description)
+		}
+		if project.Repo != "null" {
+			fmt.Printf("\t- %s\n\n", project.Repo)
+		}
+	}
+}
+
+func jumpCommand() {
+	if len(os.Args) < 3 {
+		fmt.Println("Error: Project name argument is missing.")
+		return
+	}
+	projectName := os.Args[2]
+
+	projectsJsonPath := ""
+	if runtime.GOOS == "windows" {
+		appData := os.Getenv("APPDATA")
+		projectsJsonPath = filepath.Join(appData, "linxr", "linxr_projects.json")
+	} else {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			panic("Could not determine home directory")
+		}
+		projectsJsonPath = filepath.Join(homeDir, ".linxr", "linxr_projects.json")
+	}
+
+	src, err := os.Open(projectsJsonPath)
+	if err != nil {
+		return
+	}
+	defer src.Close()
+
+	data, err := ioutil.ReadAll(src)
+	if err != nil {
+		fmt.Println("Error reading file:", err)
+		return
+	}
+
+	var wrapper ProjectsWrapper
+	err = json.Unmarshal(data, &wrapper)
+	if err != nil {
+		fmt.Println("Error parsing JSON:", err)
+		return
+	}
+
+	for _, project := range wrapper.Projects {
+		if project.Name == projectName {
+			if runtime.GOOS == "windows" {
+				cmd := exec.Command("powershell", "-Command", fmt.Sprintf("Start-Process powershell -ArgumentList \"cd %s; powershell\"; exit", project.Path))
+				err := cmd.Run()
+				if err != nil {
+					fmt.Println("Error:", err)
+				}
+			} else {
+				terminal := "gnome-terminal"
+				cmd := exec.Command(terminal, "--working-directory="+project.Path)
+				err := cmd.Run()
+				if err != nil {
+					fmt.Println("Error:", err)
+				}
+			}
+		}
+	}
+	fmt.Printf("Error: Project with name '%s' not found.\n", projectName)
 }
 
 func searchCommand() {
