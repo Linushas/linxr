@@ -19,12 +19,12 @@ linxr init <template> <opts>
 
 **Options:** 
 ```-g enable/disable``` Use *-g* to enable or disable automatic git initiazation.
-```-l <language>``` Use *-l* to specify the main language for the project. This is used to search and find projects that is using a certain language.
 ```-d <description>``` Add a description to the project
+```-o "project name"``` Set the project name, default is the name of the project directory.
 
 Ex)
 ```bash
-linxr init my-template -g disable -l python
+linxr init my-template -g disable -o "My Project"
 ```
 ---
 ### list
