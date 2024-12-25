@@ -34,11 +34,11 @@ linxr list <opts>
 ```
 
 **Options:**
-```-l <language>``` Filter list to only see projects with the specified language.
+(no options so far)
 
 Ex)
 ```bash
-linxr list -l c++
+linxr list
 ```
 
 ---
