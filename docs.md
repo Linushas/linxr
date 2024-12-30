@@ -1,7 +1,7 @@
 # Linxr Docs
 For a list of all commands (or a specific command) use:
 ```bash
-linxr help <commands>
+linxr help <command>
 ```
 
 For all listed commands, the command name should be appended right after *linxr* like this:
@@ -19,12 +19,12 @@ linxr init <template> <opts>
 
 **Options:** 
 ```-g enable/disable``` Use *-g* to enable or disable automatic git initiazation.
-```-l <language>``` Use *-l* to specify the main language for the project. This is used to search and find projects that is using a certain language.
 ```-d <description>``` Add a description to the project
+```-o "project name"``` Set the project name, default is the name of the project directory.
 
 Ex)
 ```bash
-linxr init my-template -g disable -l python
+linxr init my-template -g disable -o "My Project"
 ```
 ---
 ### list
@@ -34,11 +34,11 @@ linxr list <opts>
 ```
 
 **Options:**
-```-l <language>``` Filter list to only see projects with the specified language.
+(no options so far)
 
 Ex)
 ```bash
-linxr list -l c++
+linxr list
 ```
 
 ---
@@ -60,3 +60,16 @@ Ex)
 ```bash
 linxr template my_template new
 ```
+
+---
+### jump
+Open one of your linxr project directories in a terminal window.
+```bash
+linxr jump "project name"
+```
+
+Ex)
+```bash
+linxr jump "My Fantastic Project"
+```
+
