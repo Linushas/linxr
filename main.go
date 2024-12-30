@@ -88,10 +88,64 @@ func initCommand() {
 					fmt.Printf("Git: %s\n", string(output))
 				}
 
+				var newProject Project
+				newProject.Name = os.Args[2]
+				newProject.Description = "A new project created from template"
+				newProject.Status = "Active"
+				newProject.Path, _ = os.Getwd()
+				newProject.Created = "2024-12-30"
+				newProject.LastModified = "2024-12-30"
+				newProject.Tags = []string{}
+				if git {
+					newProject.Git = "true"
+				} else {
+					newProject.Git = "false"
+				}
+				newProject.Repo = "null"
+
+				appendProjects(newProject)
+
 				fmt.Printf("Succesfully initialized linxr project using the SDL2_C template in current directory.\n")
 			}
 		}
 	}
+}
+
+func appendProjects(newProject Project) {
+	projectsJsonPath := ""
+	if runtime.GOOS == "windows" {
+		appData := os.Getenv("APPDATA")
+		projectsJsonPath = filepath.Join(appData, "linxr", "linxr_projects.json")
+	} else {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			panic("Could not determine home directory")
+		}
+		projectsJsonPath = filepath.Join(homeDir, ".linxr", "linxr_projects.json")
+	}
+
+	var wrapper ProjectsWrapper
+
+	if _, err := os.Stat(projectsJsonPath); err == nil {
+		data, err := ioutil.ReadFile(projectsJsonPath)
+		if err == nil {
+			json.Unmarshal(data, &wrapper)
+		}
+	}
+
+	wrapper.Projects = append(wrapper.Projects, newProject)
+
+	data, err := json.MarshalIndent(wrapper, "", "  ")
+	if err != nil {
+		fmt.Printf("Error saving project: %v\n", err)
+		return
+	}
+	err = ioutil.WriteFile(projectsJsonPath, data, 0644)
+	if err != nil {
+		fmt.Printf("Error writing to file: %v\n", err)
+		return
+	}
+	fmt.Println("Project added to linxr projects list.")
 }
 
 func getTemplateDir() string {
